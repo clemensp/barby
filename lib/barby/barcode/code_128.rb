@@ -397,7 +397,7 @@ module Barby
 
     def start_num
       if gs1
-        values[start_character] + values[FNC1]
+        values[start_character] + FNC1
       else
         values[start_character]
       end
