@@ -169,12 +169,16 @@ module Barby
     CONTROL_CHARACTERS = VALUES['A'].invert.values_at(*(64..95).to_a)
 
     attr_reader :type
+    attr_accessor :gs1
 
 
-    def initialize(data, type=nil)
+    def initialize(data, type=nil, gs1=false)
+      self.gs1 = gs1
       if type
         self.type = type
         self.data = "#{data}"
+      elsif gs1
+        self.type, self.data = self.class.determine_best_type_for_data("#{data}")
       else
         self.type, self.data = self.class.determine_best_type_for_data("#{data}")
       end
@@ -392,7 +396,11 @@ module Barby
     end
 
     def start_num
-      values[start_character]
+      if gs1
+        values[start_character] + values[FNC1]
+      else
+        values[start_character]
+      end
     end
 
     def start_encoding
